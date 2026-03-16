@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .chat-container {
+      width: 420px;
+      height: 620px;
+      background: #16213e;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    /* Header */
+    .chat-header {
+      background: #0f3460;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e94560;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-info h2 {
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .header-info span {
+      color: #4ecca3;
+      font-size: 12px;
+    }
+
+    /* Messages area */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .messages::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .messages::-webkit-scrollbar-thumb {
+      background: #0f3460;
+      border-radius: 4px;
+    }
+
+    /* Message bubbles */
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 75%;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.sent {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .message.received {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .sent .bubble {
+      background: #e94560;
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .received .bubble {
+      background: #0f3460;
+      color: #e0e0e0;
+      border-bottom-left-radius: 4px;
+    }
+
+    .timestamp {
+      font-size: 10px;
+      color: #888;
+      margin-top: 4px;
+      padding: 0 4px;
+    }
+
+    /* Date divider */
+    .date-divider {
+      text-align: center;
+      font-size: 11px;
+      color: #666;
+      margin: 4px 0;
+      position: relative;
+    }
+
+    .date-divider::before,
+    .date-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 30%;
+      height: 1px;
+      background: #2a2a4a;
+    }
+
+    .date-divider::before { left: 0; }
+    .date-divider::after  { right: 0; }
+
+    /* Input area */
+    .chat-input {
+      padding: 14px 16px;
+      background: #0f3460;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      background: #16213e;
+      border: 1px solid #1a3a6e;
+      border-radius: 24px;
+      padding: 10px 16px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .chat-input input:focus {
+      border-color: #e94560;
+    }
+
+    .chat-input input::placeholder {
+      color: #555;
+    }
+
+    .send-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e94560;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.1s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover  { background: #c73652; }
+    .send-btn:active { transform: scale(0.93); }
+
+    .send-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="avatar">A</div>
+    <div class="header-info">
+      <h2>Alice</h2>
+      <span>● Online</span>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages" id="messages">
+    <div class="date-divider">Today</div>
+
+    <div class="message received">
+      <div class="bubble">Hey! How's it going? 👋</div>
+      <span class="timestamp">10:01 AM</span>
+    </div>
+
+    <div class="message sent">
+      <div class="bubble">Hey Alice! All good, thanks 😊</div>
+      <span class="timestamp">10:02 AM</span>
+    </div>
+
+    <div class="message received">
+      <div class="bubble">Did you finish the project?</div>
+      <span class="timestamp">10:03 AM</span>
+    </div>
+
+    <div class="message sent">
+      <div class="bubble">Almost! Just wrapping up the last few things.</div>
+      <span class="timestamp">10:04 AM</span>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="chat-input">
+    <input type="text" id="messageInput" placeholder="Type a message..." />
+    <button class="send-btn" id="sendBtn" title="Send">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+      </svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const messagesEl = document.getElementById('messages');
+  const inputEl    = document.getElementById('messageInput');
+  const sendBtn    = document.getElementById('sendBtn');
+
+  // Auto-replies for demo purposes
+  const autoReplies = [
+    "That's interesting! Tell me more 😄",
+    "Got it! I'll keep that in mind.",
+    "Haha, nice one! 😂",
+    "Sure, sounds good to me!",
+    "Really? I didn't know that!",
+    "Let me think about it... 🤔",
+    "Absolutely! I agree with you.",
+    "Wow, that's great news! 🎉",
+  ];
+
+  function getTime() {
+    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function addMessage(text, type) {
+    const msg = document.createElement('div');
+    msg.className = `message ${type}`;
+    msg.innerHTML = `
+      <div class="bubble">${escapeHTML(text)}</div>
+      <span class="timestamp">${getTime()}</span>
+    `;
+    messagesEl.appendChild(msg);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+
+    addMessage(text, 'sent');
+    inputEl.value = '';
+
+    // Simulate a reply after a short delay
+    setTimeout(() => {
+      const reply = autoReplies[Math.floor(Math.random() * autoReplies.length)];
+      addMessage(reply, 'received');
+    }, 800 + Math.random() * 700);
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+</script>
+
+</body>
+</html>
